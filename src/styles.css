@@ -255,14 +255,15 @@ body {
 }
 
 .card {
-  width: 60px;
-  height: 86px;
+  width: 54px;
+  height: 78px;
   border-radius: 12px;
   background: linear-gradient(135deg, #fef8ec, #e6dfcf);
   color: #1a1310;
   display: grid;
   place-items: center;
   font-weight: 700;
+  font-size: 0.9rem;
   box-shadow: inset 0 0 0 2px rgba(214, 179, 106, 0.3), 0 10px 20px rgba(0, 0, 0, 0.3);
 }
 
@@ -280,7 +281,7 @@ body {
 
 .players {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 16px;
   margin-top: 22px;
 }
@@ -464,6 +465,12 @@ body {
   }
 }
 
+@media (max-width: 980px) {
+  .players {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 720px) and (max-height: 900px) {
   body {
     overflow: hidden;
@@ -483,6 +490,12 @@ body {
     border-radius: 12px;
   }
 
+  .app--table .hero {
+    padding: 8px 10px;
+    border-radius: 10px;
+    gap: 8px;
+  }
+
   .hero__label {
     font-size: 0.65rem;
     letter-spacing: 3px;
@@ -498,6 +511,20 @@ body {
     margin: 0;
   }
 
+  .app--table .hero__label {
+    font-size: 0.55rem;
+    letter-spacing: 2px;
+  }
+
+  .app--table .hero__title h1 {
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+  }
+
+  .app--table .hero__title p {
+    display: none;
+  }
+
   .hero__badge {
     padding: 8px 10px;
     border-radius: 10px;
@@ -509,6 +536,20 @@ body {
 
   .hero__badge strong {
     font-size: 1.05rem;
+  }
+
+  .app--table .hero__badge {
+    padding: 6px 8px;
+    border-radius: 8px;
+  }
+
+  .app--table .hero__badge span {
+    font-size: 0.55rem;
+    letter-spacing: 2px;
+  }
+
+  .app--table .hero__badge strong {
+    font-size: 0.8rem;
   }
 
   .panel {
@@ -565,10 +606,10 @@ body {
   }
 
   .card {
-    width: 42px;
-    height: 60px;
+    width: 36px;
+    height: 52px;
     border-radius: 10px;
-    font-size: 0.8rem;
+    font-size: 0.7rem;
   }
 
   .players {
