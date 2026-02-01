@@ -334,6 +334,27 @@ body {
   font-size: 0.85rem;
 }
 
+.player__bank {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.player__delta {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.player__delta--positive {
+  color: #7fe59c;
+}
+
+.player__delta--negative {
+  color: #f07373;
+}
+
 .player__bet {
   margin-top: 10px;
   font-size: 1.1rem;
@@ -700,6 +721,10 @@ body {
   .player__chips {
     font-size: 0.75rem;
     padding: 4px 8px;
+  }
+
+  .player__delta {
+    font-size: 0.7rem;
   }
 
   .player__footer {

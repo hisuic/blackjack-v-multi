@@ -119,10 +119,12 @@ export default function App() {
       id: index + 1,
       name: `Player ${index + 1}`,
       chips: existing[index]?.chips ?? STARTING_CHIPS,
+      roundStartChips: existing[index]?.roundStartChips ?? STARTING_CHIPS,
       bet: 0,
       hand: [],
       status: "idle",
       result: "",
+      delta: 0,
     }));
 
   const handleLobbyStart = () => {
@@ -179,6 +181,8 @@ export default function App() {
     const reservedPlayers = players.map((player) => ({
       ...player,
       chips: player.chips - player.bet,
+      roundStartChips: player.chips,
+      delta: 0,
       result: "",
       hand: [],
       status: "active",
@@ -305,9 +309,11 @@ export default function App() {
       const finalPlayers = resolvedPlayers.map((player) => {
         const refund = player.result === "push" ? player.bet : 0;
         const payout = payoutMap.get(player.id) ?? 0;
+        const finalChips = player.chips + refund + payout;
         return {
           ...player,
-          chips: player.chips + refund + payout,
+          chips: finalChips,
+          delta: finalChips - player.roundStartChips,
         };
       });
 
@@ -319,9 +325,11 @@ export default function App() {
         if (player.result === "push") payout = player.bet;
         if (player.result === "win") payout = player.bet * 2;
         if (player.result === "blackjack") payout = player.bet * 2.5;
+        const finalChips = player.chips + payout;
         return {
           ...player,
-          chips: player.chips + payout,
+          chips: finalChips,
+          delta: finalChips - player.roundStartChips,
         };
       });
       setPlayers(payoutPlayers);
@@ -341,6 +349,7 @@ export default function App() {
         hand: [],
         status: "idle",
         result: "",
+        delta: 0,
       }))
     );
     setDealer(emptyDealer);
@@ -477,7 +486,20 @@ export default function App() {
                         <h3>{player.name}</h3>
                         <span className="player__status">{statusLabel(player.status)}</span>
                       </div>
-                      <div className="player__chips">Chips: {formatChips(player.chips)}</div>
+                      <div className="player__bank">
+                        <div className="player__chips">Chips: {formatChips(player.chips)}</div>
+                        {phase === "roundEnd" && player.delta !== 0 && (
+                          <div
+                            className={`player__delta ${
+                              player.delta > 0 ? "player__delta--positive" : "player__delta--negative"
+                            }`}
+                          >
+                            {player.delta > 0
+                              ? `+${formatChips(player.delta)}`
+                              : `-${formatChips(Math.abs(player.delta))}`}
+                          </div>
+                        )}
+                      </div>
                     </div>
                     <div className="card-row">
                       {player.hand.map((card, cardIndex) => (
