@@ -360,7 +360,7 @@ export default function App() {
   const formatChips = (value) => `$${value.toFixed(0)}`;
 
   return (
-    <div className="app">
+    <div className={screen === "table" ? "app app--table" : "app"}>
       <header className="hero">
         <div className="hero__title">
           <span className="hero__label">Blackjack Royale</span>
@@ -400,16 +400,16 @@ export default function App() {
 
       {screen === "table" && (
         <section className="table">
-        <div className="table__header">
-          <div>
-            <h2>{tableTitle}</h2>
-            <p>ディーラーに勝ってチップを増やしましょう。</p>
+          <div className="table__header">
+            <div>
+              <h2>{tableTitle}</h2>
+              <p>ディーラーに勝ってチップを増やしましょう。</p>
+            </div>
+            <div className="table__info">
+              {isMulti && <div className="chip-chip">Pot: {formatChips(totalPot)}</div>}
+              <div className="chip-chip">Deck: {deck.length}</div>
+            </div>
           </div>
-          <div className="table__info">
-            {isMulti && <div className="chip-chip">Pot: {formatChips(totalPot)}</div>}
-            <div className="chip-chip">Deck: {deck.length}</div>
-          </div>
-        </div>
 
         <div className="dealer">
           <div className="dealer__label">ディーラー</div>
