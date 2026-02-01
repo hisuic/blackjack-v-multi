@@ -5,6 +5,14 @@ const RANKS = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
 
 const STARTING_CHIPS = 1000;
 const CHIP_VALUES = [10, 25, 50, 100, 250, 500];
+const CHIP_COLORS = {
+  10: "#e6edf0",
+  25: "#4aa3df",
+  50: "#e25b4c",
+  100: "#49b86e",
+  250: "#7d5bd8",
+  500: "#f2c356",
+};
 
 const emptyDealer = { hand: [], hidden: true };
 
@@ -503,8 +511,9 @@ export default function App() {
                   key={`chip-shared-${value}`}
                   className="chip-button"
                   onClick={() => handleBetAdd(activeBetIndex, value)}
+                  style={{ "--chip-color": CHIP_COLORS[value] ?? "#d6b36a" }}
                 >
-                  ${value}
+                  <span className="chip-button__value">${value}</span>
                 </button>
               ))}
             </div>
