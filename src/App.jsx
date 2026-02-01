@@ -51,15 +51,15 @@ const formatCard = (card) => `${card.rank}${card.suit}`;
 const statusLabel = (status) => {
   switch (status) {
     case "active":
-      return "行動中";
+      return "Action";
     case "stand":
-      return "スタンド";
+      return "Stand";
     case "bust":
-      return "バースト";
+      return "Bust";
     case "blackjack":
-      return "ブラックジャック";
+      return "Blackjack";
     default:
-      return "待機";
+      return "Idle";
   }
 };
 
@@ -103,7 +103,7 @@ export default function App() {
   const activeBetIndex = players.length ? Math.min(betIndex, players.length - 1) : 0;
   const activeBetPlayer = players[activeBetIndex];
 
-  const tableTitle = isMulti ? "マルチテーブル" : "ソロテーブル";
+  const tableTitle = isMulti ? "Multiplayer Table" : "Solo Table";
   const modeBadge = isMulti ? "MULTI" : "SOLO";
 
   const buildPlayers = (count, existing = []) =>
@@ -125,7 +125,7 @@ export default function App() {
     setRound(1);
     setPot(0);
     setBetIndex(0);
-    setMessage("チップを選んでディールを開始してください");
+    setMessage("Select chips and press Deal to start the round.");
   };
 
   const ensureDeck = (current) => {
@@ -163,7 +163,7 @@ export default function App() {
   const handleDeal = () => {
     const invalid = players.some((player) => player.bet <= 0 || player.bet > player.chips);
     if (invalid) {
-      setMessage("全員のベットを0より大きく、所持チップ以下で入力してください");
+      setMessage("Each player must bet more than $0 and within their chip balance.");
       return;
     }
 
@@ -182,7 +182,7 @@ export default function App() {
     setPlayers(dealtPlayers);
     setDealer(nextDealer);
     setPhase("playing");
-    setMessage("アクションを選んでください");
+    setMessage("Choose your action.");
 
     if (isMulti) {
       setPot((prev) => prev + potIncrease);
@@ -322,7 +322,7 @@ export default function App() {
     setDealer(nextDealer);
     setDeck(nextDeck);
     setPhase("roundEnd");
-    setMessage("ラウンド終了。次のラウンドを開始できます");
+    setMessage("Round complete. Start the next round when ready.");
   };
 
   const handleNextRound = () => {
@@ -339,7 +339,7 @@ export default function App() {
     setPhase("betting");
     setRound((prev) => prev + 1);
     setBetIndex(0);
-    setMessage("チップを選んでディールを開始してください");
+    setMessage("Select chips and press Deal to start the round.");
   };
 
   const handleBetAdd = (index, amount) => {
@@ -376,7 +376,7 @@ export default function App() {
         <div className="hero__title">
           <span className="hero__label">Blackjack Royale</span>
           <h1>Casino Table Suite</h1>
-          <p>ゴールドの光とフェルトの香りに包まれた、対戦型ブラックジャック。</p>
+          <p>Competitive blackjack wrapped in gold light and felt.</p>
         </div>
         <div className="hero__badge">
           <span>{modeBadge}</span>
@@ -387,8 +387,8 @@ export default function App() {
       {screen === "lobby" && (
         <section className="panel panel--lobby">
           <div className="panel__header">
-            <h2>プレイヤー人数を選択</h2>
-            <p>チップを置くテーブル人数を決めて、すぐにディールへ。</p>
+            <h2>Select player count</h2>
+            <p>Pick how many seats are at the table, then deal in.</p>
           </div>
           <div className="player-count">
             {[1, 2, 3, 4].map((count) => (
@@ -397,13 +397,13 @@ export default function App() {
                 className={playerCount === count ? "btn btn--primary" : "btn"}
                 onClick={() => setPlayerCount(count)}
               >
-                {count} 人
+                {count} Players
               </button>
             ))}
           </div>
           <div className="setup-actions">
             <button className="btn btn--gold" onClick={handleLobbyStart}>
-              テーブルを開く
+              Open Table
             </button>
           </div>
         </section>
@@ -414,7 +414,7 @@ export default function App() {
           <div className="table__header">
             <div>
               <h2>{tableTitle}</h2>
-              <p>ディーラーに勝ってチップを増やしましょう。</p>
+              <p>Beat the dealer and grow your stack.</p>
             </div>
             <div className="table__info">
               {isMulti && <div className="chip-chip">Pot: {formatChips(totalPot)}</div>}
@@ -423,7 +423,7 @@ export default function App() {
           </div>
 
         <div className="dealer">
-          <div className="dealer__label">ディーラー</div>
+          <div className="dealer__label">Dealer</div>
           <div className="card-row">
             {dealer.hand.map((card, index) => (
               <div className={dealer.hidden && index === 0 ? "card card--back" : "card"} key={`dealer-${index}`}>
@@ -432,7 +432,7 @@ export default function App() {
             ))}
           </div>
         <div className="dealer__total">
-          {dealer.hidden ? "?" : `合計: ${calculateHand(dealer.hand)}`}
+          {dealer.hidden ? "?" : `Total: ${calculateHand(dealer.hand)}`}
         </div>
         </div>
 
@@ -458,9 +458,9 @@ export default function App() {
                   <>
                     <div className="player__header player__header--betting">
                       <h3>{player.name}</h3>
-                      <span className="player__status">ベット中</span>
+                      <span className="player__status">Betting</span>
                     </div>
-                    <div className="player__bet">ベット: {formatChips(player.bet)}</div>
+                    <div className="player__bet">Bet: {formatChips(player.bet)}</div>
                   </>
                 ) : (
                   <>
@@ -479,8 +479,8 @@ export default function App() {
                       ))}
                     </div>
                     <div className="player__footer">
-                      <span className="player__total">合計: {player.hand.length ? total : "-"}</span>
-                      <span className="player__bet-value">ベット: {formatChips(player.bet)}</span>
+                      <span className="player__total">Total: {player.hand.length ? total : "-"}</span>
+                      <span className="player__bet-value">Bet: {formatChips(player.bet)}</span>
                       <span className="result">{resultLabel(player.result)}</span>
                     </div>
                   </>
@@ -492,7 +492,7 @@ export default function App() {
 
         {phase === "betting" && players.length > 0 && (
           <div className="bet-panel bet-panel--shared">
-            <div className="bet-panel__label">ベットするプレイヤー</div>
+            <div className="bet-panel__label">Active betting seat</div>
             <div className="bet-panel__focus">
               <span>{activeBetPlayer?.name ?? "Player"}</span>
               <span className="bet-panel__amount">{formatChips(activeBetPlayer?.bet ?? 0)}</span>
@@ -510,17 +510,17 @@ export default function App() {
             </div>
             <div className="chip-actions">
               <button className="btn btn--ghost" onClick={() => handleBetClear(activeBetIndex)}>
-                クリア
+                Clear
               </button>
               <button className="btn btn--ghost" onClick={() => handleBetAllIn(activeBetIndex)}>
-                オールイン
+                All-in
               </button>
               {players.length > 1 && (
                 <button
                   className="btn btn--ghost"
                   onClick={() => setBetIndex((prev) => (players.length ? (prev + 1) % players.length : 0))}
                 >
-                  次のプレイヤー
+                  Next player
                 </button>
               )}
             </div>
@@ -530,22 +530,22 @@ export default function App() {
         <div className="table__actions">
           {phase === "betting" && (
             <button className="btn btn--primary" onClick={handleDeal}>
-              ディール
+              Deal
             </button>
           )}
           {phase === "playing" && (
             <div className="action-row">
               <button className="btn" onClick={handleHit}>
-                ヒット
+                Hit
               </button>
               <button className="btn" onClick={handleStand}>
-                スタンド
+                Stand
               </button>
             </div>
           )}
           {phase === "roundEnd" && (
             <button className="btn btn--gold" onClick={handleNextRound}>
-              次のラウンド
+              Next round
             </button>
           )}
         </div>
