@@ -108,12 +108,6 @@ body {
   color: rgba(244, 239, 228, 0.7);
 }
 
-.mode-switch {
-  display: flex;
-  gap: 12px;
-  margin: 18px 0;
-}
-
 .btn {
   border: 1px solid rgba(214, 179, 106, 0.4);
   background: rgba(7, 14, 12, 0.6);
@@ -140,6 +134,19 @@ body {
   color: #251d10;
   border: none;
   font-weight: 600;
+}
+
+.btn--ghost {
+  border-color: rgba(214, 179, 106, 0.25);
+  background: rgba(0, 0, 0, 0.25);
+  font-size: 0.85rem;
+}
+
+.player-count {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 18px;
 }
 
 .setup-grid {
@@ -248,14 +255,15 @@ body {
 }
 
 .card {
-  width: 60px;
-  height: 86px;
+  width: 46px;
+  height: 66px;
   border-radius: 12px;
   background: linear-gradient(135deg, #fef8ec, #e6dfcf);
   color: #1a1310;
   display: grid;
   place-items: center;
   font-weight: 700;
+  font-size: 0.82rem;
   box-shadow: inset 0 0 0 2px rgba(214, 179, 106, 0.3), 0 10px 20px rgba(0, 0, 0, 0.3);
 }
 
@@ -266,12 +274,14 @@ body {
 
 .dealer__total {
   margin-top: 10px;
-  color: rgba(244, 239, 228, 0.75);
+  color: rgba(244, 239, 228, 0.9);
+  font-size: 0.95rem;
+  font-weight: 600;
 }
 
 .players {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  display: flex;
+  flex-direction: column;
   gap: 16px;
   margin-top: 22px;
 }
@@ -289,11 +299,20 @@ body {
   box-shadow: 0 0 30px rgba(214, 179, 106, 0.25);
 }
 
+.player--betting {
+  border-color: rgba(214, 179, 106, 0.85);
+  box-shadow: 0 0 26px rgba(214, 179, 106, 0.35);
+}
+
 .player__header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 12px;
+}
+
+.player__header--betting {
+  align-items: center;
 }
 
 .player__header h3 {
@@ -315,12 +334,46 @@ body {
   font-size: 0.85rem;
 }
 
+.player__bank {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.player__delta {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.player__delta--positive {
+  color: #7fe59c;
+}
+
+.player__delta--negative {
+  color: #f07373;
+}
+
+.player__bet {
+  margin-top: 10px;
+  font-size: 1.1rem;
+  color: var(--gold);
+  font-weight: 700;
+}
+
 .player__footer {
   display: flex;
   justify-content: space-between;
   margin-top: 10px;
-  font-size: 0.85rem;
-  color: rgba(244, 239, 228, 0.75);
+  font-size: 0.95rem;
+  color: rgba(244, 239, 228, 0.88);
+}
+
+.player__total,
+.player__bet-value {
+  color: var(--cream);
+  font-weight: 600;
 }
 
 .result {
@@ -328,20 +381,128 @@ body {
   text-transform: uppercase;
 }
 
-.bet-input {
+.bet-panel {
   margin-top: 12px;
+  padding: 12px;
+  border-radius: 14px;
+  background: rgba(6, 12, 10, 0.65);
+  border: 1px dashed rgba(214, 179, 106, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.bet-panel--shared {
+  margin-top: 18px;
+}
+
+.bet-panel__label {
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(244, 239, 228, 0.65);
+}
+
+.bet-panel__focus {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 12px;
+  font-size: 0.95rem;
 }
 
-.bet-input input {
-  background: rgba(8, 13, 10, 0.8);
-  border: 1px solid rgba(214, 179, 106, 0.3);
-  border-radius: 10px;
-  padding: 8px 10px;
-  color: var(--cream);
-  width: 110px;
+.bet-panel__amount {
+  color: var(--gold);
+  font-weight: 600;
+}
+
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.chip-button {
+  --chip-color: #d6b36a;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  border: 2px solid rgba(0, 0, 0, 0.35);
+  background: radial-gradient(circle at 30% 25%, #ffffff 0%, var(--chip-color) 35%, #0c0c0c 120%);
+  color: #0f0f0f;
+  cursor: pointer;
+  font-weight: 600;
+  display: grid;
+  place-items: center;
+  position: relative;
+  box-shadow: inset 0 0 0 6px rgba(255, 255, 255, 0.15), 0 8px 16px rgba(0, 0, 0, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.chip-button::before {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border-radius: 50%;
+  border: 2px dashed rgba(255, 255, 255, 0.65);
+  opacity: 0.9;
+}
+
+.chip-button::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    rgba(255, 255, 255, 0.5) 0deg 18deg,
+    transparent 18deg 30deg,
+    rgba(255, 255, 255, 0.5) 30deg 48deg,
+    transparent 48deg 60deg,
+    rgba(255, 255, 255, 0.5) 60deg 78deg,
+    transparent 78deg 90deg,
+    rgba(255, 255, 255, 0.5) 90deg 108deg,
+    transparent 108deg 120deg,
+    rgba(255, 255, 255, 0.5) 120deg 138deg,
+    transparent 138deg 150deg,
+    rgba(255, 255, 255, 0.5) 150deg 168deg,
+    transparent 168deg 180deg,
+    rgba(255, 255, 255, 0.5) 180deg 198deg,
+    transparent 198deg 210deg,
+    rgba(255, 255, 255, 0.5) 210deg 228deg,
+    transparent 228deg 240deg,
+    rgba(255, 255, 255, 0.5) 240deg 258deg,
+    transparent 258deg 270deg,
+    rgba(255, 255, 255, 0.5) 270deg 288deg,
+    transparent 288deg 300deg,
+    rgba(255, 255, 255, 0.5) 300deg 318deg,
+    transparent 318deg 330deg,
+    rgba(255, 255, 255, 0.5) 330deg 348deg,
+    transparent 348deg 360deg
+  );
+  mix-blend-mode: soft-light;
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.chip-button__value {
+  position: relative;
+  z-index: 1;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #14110d;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.4);
+}
+
+.chip-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.35);
+}
+
+.chip-actions {
+  display: flex;
+  gap: 8px;
 }
 
 .table__actions {
@@ -384,5 +545,239 @@ body {
   .table__actions {
     flex-direction: column;
     align-items: flex-start;
+  }
+}
+
+@media (max-width: 980px) {
+  .players {
+    gap: 14px;
+  }
+}
+
+@media (max-width: 720px) and (max-height: 900px) {
+  body {
+    overflow: hidden;
+  }
+
+  .app {
+    padding: 14px 12px 18px;
+    gap: 14px;
+  }
+
+  .app--table {
+    min-height: 100svh;
+  }
+
+  .hero {
+    padding: 12px 14px;
+    border-radius: 12px;
+  }
+
+  .app--table .hero {
+    padding: 8px 10px;
+    border-radius: 10px;
+    gap: 8px;
+  }
+
+  .hero__label {
+    font-size: 0.65rem;
+    letter-spacing: 3px;
+  }
+
+  .hero__title h1 {
+    font-size: 1.35rem;
+    letter-spacing: 1px;
+  }
+
+  .hero__title p {
+    font-size: 0.75rem;
+    margin: 0;
+  }
+
+  .app--table .hero__label {
+    font-size: 0.55rem;
+    letter-spacing: 2px;
+  }
+
+  .app--table .hero__title h1 {
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+  }
+
+  .app--table .hero__title p {
+    display: none;
+  }
+
+  .hero__badge {
+    padding: 8px 10px;
+    border-radius: 10px;
+  }
+
+  .hero__badge span {
+    font-size: 0.65rem;
+  }
+
+  .hero__badge strong {
+    font-size: 1.05rem;
+  }
+
+  .app--table .hero__badge {
+    padding: 6px 8px;
+    border-radius: 8px;
+  }
+
+  .app--table .hero__badge span {
+    font-size: 0.55rem;
+    letter-spacing: 2px;
+  }
+
+  .app--table .hero__badge strong {
+    font-size: 0.8rem;
+  }
+
+  .panel {
+    padding: 16px;
+  }
+
+  .table {
+    padding: 14px;
+    border-radius: 18px;
+    display: grid;
+    grid-template-rows: auto auto 1fr auto auto;
+    gap: 12px;
+    min-height: calc(100svh - 28px);
+  }
+
+  .table__header h2 {
+    font-size: 1.2rem;
+    margin-bottom: 4px;
+  }
+
+  .table__header p {
+    font-size: 0.8rem;
+    margin: 0;
+  }
+
+  .table__info {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .chip-chip {
+    padding: 6px 10px;
+    font-size: 0.7rem;
+  }
+
+  .dealer {
+    margin-top: 0;
+    padding: 10px;
+    border-radius: 14px;
+  }
+
+  .dealer__label {
+    letter-spacing: 2px;
+  }
+
+  .dealer__total {
+    font-size: 0.85rem;
+  }
+
+  .card-row {
+    gap: 6px;
+    margin-top: 8px;
+  }
+
+  .card {
+    width: 32px;
+    height: 46px;
+    border-radius: 10px;
+    font-size: 0.62rem;
+  }
+
+  .players {
+    margin-top: 0;
+    gap: 10px;
+  }
+
+  .player {
+    padding: 10px;
+    border-radius: 14px;
+  }
+
+  .player__header {
+    align-items: flex-start;
+  }
+
+  .player__header h3 {
+    font-size: 0.95rem;
+  }
+
+  .player__status {
+    font-size: 0.65rem;
+  }
+
+  .player__chips {
+    font-size: 0.75rem;
+    padding: 4px 8px;
+  }
+
+  .player__delta {
+    font-size: 0.7rem;
+  }
+
+  .player__footer {
+    flex-wrap: wrap;
+    gap: 6px 10px;
+    font-size: 0.82rem;
+  }
+
+  .player__bet {
+    font-size: 1rem;
+  }
+
+  .bet-panel {
+    padding: 8px;
+    gap: 6px;
+  }
+
+  .bet-panel__label {
+    font-size: 0.65rem;
+  }
+
+  .bet-panel__focus {
+    font-size: 0.85rem;
+  }
+
+  .chip-row {
+    gap: 6px;
+  }
+
+  .chip-button {
+    width: 46px;
+    height: 46px;
+  }
+
+  .chip-button__value {
+    font-size: 0.65rem;
+  }
+
+  .chip-actions {
+    gap: 6px;
+  }
+
+  .btn {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+  }
+
+  .table__actions {
+    margin-top: 0;
+  }
+
+  .message {
+    margin-top: 0;
+    padding: 10px 12px;
+    font-size: 0.8rem;
   }
 }
