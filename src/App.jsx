@@ -145,13 +145,19 @@ export default function App() {
     return current;
   };
 
-  const dealInitial = (preparedDeck, preparedPlayers) => {
+  const dealInitial = (preparedDeck, preparedPlayers, activeSeats) => {
     let nextDeck = ensureDeck(preparedDeck);
-    const dealtPlayers = preparedPlayers.map((player) => ({ ...player, hand: [], status: "active", result: "" }));
+    const dealtPlayers = preparedPlayers.map((player, index) => ({
+      ...player,
+      hand: [],
+      status: activeSeats.has(index) ? "active" : "idle",
+      result: "",
+    }));
     let nextDealer = { hand: [], hidden: true };
 
     for (let i = 0; i < 2; i += 1) {
       for (let p = 0; p < dealtPlayers.length; p += 1) {
+        if (!activeSeats.has(p)) continue;
         const draw = drawCard(nextDeck);
         nextDeck = draw.next;
         dealtPlayers[p].hand.push(draw.card);
@@ -171,7 +177,18 @@ export default function App() {
   };
 
   const handleDeal = () => {
-    const invalid = players.some((player) => player.bet <= 0 || player.bet > player.chips);
+    const eligibleSeats = players
+      .map((player, index) => (player.chips > 0 ? index : -1))
+      .filter((index) => index !== -1);
+    if (!eligibleSeats.length) {
+      setMessage("No players have chips left to bet.");
+      return;
+    }
+
+    const invalid = eligibleSeats.some((index) => {
+      const player = players[index];
+      return player.bet <= 0 || player.bet > player.chips;
+    });
     if (invalid) {
       setMessage("Each player must bet more than $0 and within their chip balance.");
       return;
@@ -188,7 +205,7 @@ export default function App() {
       status: "active",
     }));
 
-    const { nextDeck, dealtPlayers, nextDealer } = dealInitial(deck, reservedPlayers);
+    const { nextDeck, dealtPlayers, nextDealer } = dealInitial(deck, reservedPlayers, new Set(eligibleSeats));
 
     setDeck(nextDeck);
     setPlayers(dealtPlayers);
