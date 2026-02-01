@@ -296,11 +296,20 @@ body {
   box-shadow: 0 0 30px rgba(214, 179, 106, 0.25);
 }
 
+.player--betting {
+  border-color: rgba(214, 179, 106, 0.85);
+  box-shadow: 0 0 26px rgba(214, 179, 106, 0.35);
+}
+
 .player__header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 12px;
+}
+
+.player__header--betting {
+  align-items: center;
 }
 
 .player__header h3 {
@@ -320,6 +329,13 @@ body {
   padding: 6px 10px;
   border-radius: 10px;
   font-size: 0.85rem;
+}
+
+.player__bet {
+  margin-top: 10px;
+  font-size: 1.05rem;
+  color: var(--cream);
+  font-weight: 600;
 }
 
 .player__footer {
@@ -346,11 +362,28 @@ body {
   gap: 10px;
 }
 
+.bet-panel--shared {
+  margin-top: 18px;
+}
+
 .bet-panel__label {
   font-size: 0.75rem;
   letter-spacing: 2px;
   text-transform: uppercase;
   color: rgba(244, 239, 228, 0.65);
+}
+
+.bet-panel__focus {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.95rem;
+}
+
+.bet-panel__amount {
+  color: var(--gold);
+  font-weight: 600;
 }
 
 .chip-row {
@@ -560,6 +593,10 @@ body {
     font-size: 0.72rem;
   }
 
+  .player__bet {
+    font-size: 0.95rem;
+  }
+
   .bet-panel {
     padding: 8px;
     gap: 6px;
@@ -567,6 +604,10 @@ body {
 
   .bet-panel__label {
     font-size: 0.65rem;
+  }
+
+  .bet-panel__focus {
+    font-size: 0.85rem;
   }
 
   .chip-row {
