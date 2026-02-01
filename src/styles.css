@@ -437,8 +437,37 @@ body {
     min-height: 100svh;
   }
 
-  .app--table .hero {
-    display: none;
+  .hero {
+    padding: 12px 14px;
+    border-radius: 12px;
+  }
+
+  .hero__label {
+    font-size: 0.65rem;
+    letter-spacing: 3px;
+  }
+
+  .hero__title h1 {
+    font-size: 1.35rem;
+    letter-spacing: 1px;
+  }
+
+  .hero__title p {
+    font-size: 0.75rem;
+    margin: 0;
+  }
+
+  .hero__badge {
+    padding: 8px 10px;
+    border-radius: 10px;
+  }
+
+  .hero__badge span {
+    font-size: 0.65rem;
+  }
+
+  .hero__badge strong {
+    font-size: 1.05rem;
   }
 
   .panel {
