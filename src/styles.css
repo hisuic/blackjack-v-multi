@@ -255,15 +255,15 @@ body {
 }
 
 .card {
-  width: 54px;
-  height: 78px;
+  width: 46px;
+  height: 66px;
   border-radius: 12px;
   background: linear-gradient(135deg, #fef8ec, #e6dfcf);
   color: #1a1310;
   display: grid;
   place-items: center;
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 0.82rem;
   box-shadow: inset 0 0 0 2px rgba(214, 179, 106, 0.3), 0 10px 20px rgba(0, 0, 0, 0.3);
 }
 
@@ -280,8 +280,8 @@ body {
 }
 
 .players {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  display: flex;
+  flex-direction: column;
   gap: 16px;
   margin-top: 22px;
 }
@@ -550,7 +550,7 @@ body {
 
 @media (max-width: 980px) {
   .players {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
   }
 }
 
@@ -689,16 +689,15 @@ body {
   }
 
   .card {
-    width: 36px;
-    height: 52px;
+    width: 32px;
+    height: 46px;
     border-radius: 10px;
-    font-size: 0.7rem;
+    font-size: 0.62rem;
   }
 
   .players {
     margin-top: 0;
     gap: 10px;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .player {

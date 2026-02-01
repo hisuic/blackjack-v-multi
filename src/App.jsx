@@ -474,8 +474,11 @@ export default function App() {
                 {isBetting ? (
                   <>
                     <div className="player__header player__header--betting">
-                      <h3>{player.name}</h3>
-                      <span className="player__status">Betting</span>
+                      <div>
+                        <h3>{player.name}</h3>
+                        <span className="player__status">Betting</span>
+                      </div>
+                      <div className="player__chips">Chips: {formatChips(player.chips)}</div>
                     </div>
                     <div className="player__bet">Bet: {formatChips(player.bet)}</div>
                   </>
