@@ -3,10 +3,8 @@ import { useMemo, useState } from "react";
 const SUITS = ["♠", "♥", "♦", "♣"];
 const RANKS = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
 
-const DEFAULT_PLAYERS = [
-  { id: 1, name: "Player 1", chips: 1000, bet: 0, hand: [], status: "idle", result: "" },
-  { id: 2, name: "Player 2", chips: 1000, bet: 0, hand: [], status: "idle", result: "" },
-];
+const STARTING_CHIPS = 1000;
+const CHIP_VALUES = [10, 25, 50, 100, 250, 500];
 
 const emptyDealer = { hand: [], hidden: true };
 
@@ -88,73 +86,42 @@ const nextActiveIndex = (players, fromIndex) => {
 };
 
 export default function App() {
-  const [mode, setMode] = useState("single");
-  const [phase, setPhase] = useState("setup");
-  const [players, setPlayers] = useState(DEFAULT_PLAYERS);
+  const [screen, setScreen] = useState("lobby");
+  const [phase, setPhase] = useState("betting");
+  const [playerCount, setPlayerCount] = useState(2);
+  const [players, setPlayers] = useState([]);
   const [dealer, setDealer] = useState(emptyDealer);
   const [deck, setDeck] = useState(() => shuffle(createDeck()));
   const [currentIndex, setCurrentIndex] = useState(0);
   const [message, setMessage] = useState("");
   const [round, setRound] = useState(1);
   const [pot, setPot] = useState(0);
-  const [settings, setSettings] = useState({
-    playerCount: 2,
-    startingChips: 1000,
-    potMode: true,
-  });
+  const isMulti = playerCount > 1;
 
   const totalPot = useMemo(() => pot, [pot]);
 
-  const tableTitle = mode === "single" ? "ソロテーブル" : "マルチテーブル";
+  const tableTitle = isMulti ? "マルチテーブル" : "ソロテーブル";
+  const modeBadge = isMulti ? "MULTI" : "SOLO";
 
-  const buildPlayers = (count, starting, existing = []) =>
+  const buildPlayers = (count, existing = []) =>
     Array.from({ length: count }).map((_, index) => ({
       id: index + 1,
-      name: existing[index]?.name ?? `Player ${index + 1}`,
-      chips: starting,
+      name: `Player ${index + 1}`,
+      chips: existing[index]?.chips ?? STARTING_CHIPS,
       bet: 0,
       hand: [],
       status: "idle",
       result: "",
     }));
 
-  const resetPlayers = (count = settings.playerCount, starting = settings.startingChips) => {
-    setPlayers(buildPlayers(count, starting, players));
-  };
-
-  const handleModeChange = (value) => {
-    setMode(value);
-    setPhase("setup");
+  const handleLobbyStart = () => {
+    setPlayers(buildPlayers(playerCount));
     setDealer(emptyDealer);
-    setPot(0);
-    setMessage("");
-    if (value === "single") {
-      setSettings((prev) => ({ ...prev, playerCount: 1 }));
-      setPlayers([
-        {
-          id: 1,
-          name: "You",
-          chips: settings.startingChips,
-          bet: 0,
-          hand: [],
-          status: "idle",
-          result: "",
-        },
-      ]);
-    } else {
-      const nextCount = Math.max(2, settings.playerCount);
-      setSettings((prev) => ({ ...prev, playerCount: Math.max(2, prev.playerCount) }));
-      setPlayers(buildPlayers(nextCount, settings.startingChips, players));
-    }
-  };
-
-  const handleSetupApply = () => {
-    const count = mode === "single" ? 1 : settings.playerCount;
-    setPlayers(buildPlayers(count, settings.startingChips, players));
     setPhase("betting");
+    setScreen("table");
     setRound(1);
     setPot(0);
-    setMessage("ベットを入力してディールを開始してください");
+    setMessage("チップを選んでディールを開始してください");
   };
 
   const ensureDeck = (current) => {
@@ -213,13 +180,13 @@ export default function App() {
     setPhase("playing");
     setMessage("アクションを選んでください");
 
-    if (mode === "multi" && settings.potMode) {
+    if (isMulti) {
       setPot((prev) => prev + potIncrease);
     }
 
     const nextIndex = nextActiveIndex(dealtPlayers, -1);
     if (nextIndex === -1) {
-      const nextPot = mode === "multi" && settings.potMode ? pot + potIncrease : pot;
+      const nextPot = isMulti ? pot + potIncrease : pot;
       handleDealerTurn(dealtPlayers, nextDealer, nextDeck, nextPot);
     } else {
       setCurrentIndex(nextIndex);
@@ -304,7 +271,7 @@ export default function App() {
       return { ...player, result };
     });
 
-    if (mode === "multi" && settings.potMode) {
+    if (isMulti) {
       const pushes = resolvedPlayers.filter((player) => player.result === "push");
       pushes.forEach((player) => {
         potPool -= player.bet;
@@ -367,23 +334,30 @@ export default function App() {
     setDealer(emptyDealer);
     setPhase("betting");
     setRound((prev) => prev + 1);
-    setMessage("ベットを入力してディールを開始してください");
+    setMessage("チップを選んでディールを開始してください");
   };
 
-  const handleBetChange = (index, value) => {
+  const handleBetAdd = (index, amount) => {
     setPlayers((prev) =>
-      prev.map((player, idx) =>
-        idx === index
-          ? {
-              ...player,
-              bet: Number.isNaN(Number(value)) ? 0 : Math.max(0, Number(value)),
-            }
-          : player
-      )
+      prev.map((player, idx) => {
+        if (idx !== index) return player;
+        const nextBet = Math.min(player.chips, player.bet + amount);
+        return { ...player, bet: nextBet };
+      })
     );
   };
 
-  const modeBadge = mode === "single" ? "SOLO" : "MULTI";
+  const handleBetClear = (index) => {
+    setPlayers((prev) => prev.map((player, idx) => (idx === index ? { ...player, bet: 0 } : player)));
+  };
+
+  const handleBetAllIn = (index) => {
+    setPlayers((prev) =>
+      prev.map((player, idx) => (idx === index ? { ...player, bet: player.chips } : player))
+    );
+  };
+
+  const formatChips = (value) => `$${value.toFixed(0)}`;
 
   return (
     <div className="app">
@@ -399,108 +373,40 @@ export default function App() {
         </div>
       </header>
 
-      <section className="panel panel--mode">
-        <div className="panel__header">
-          <h2>モード選択</h2>
-          <p>ソロでも、複数人でも。同じテーブルで勝負できます。</p>
-        </div>
-        <div className="mode-switch">
-          <button
-            className={mode === "single" ? "btn btn--primary" : "btn"}
-            onClick={() => handleModeChange("single")}
-          >
-            ソロ
-          </button>
-          <button
-            className={mode === "multi" ? "btn btn--primary" : "btn"}
-            onClick={() => handleModeChange("multi")}
-          >
-            マルチ
-          </button>
-        </div>
-        <div className="setup-grid">
-          {mode === "multi" && (
-            <label className="field">
-              <span>プレイヤー人数 (2-4)</span>
-              <input
-                type="number"
-                min="2"
-                max="4"
-                value={settings.playerCount}
-                onChange={(event) => {
-                  const nextCount = Math.min(4, Math.max(2, Number(event.target.value)));
-                  setSettings((prev) => ({
-                    ...prev,
-                    playerCount: nextCount,
-                  }));
-                  setPlayers((prev) => buildPlayers(nextCount, settings.startingChips, prev));
-                }}
-              />
-            </label>
-          )}
-          <label className="field">
-            <span>開始チップ</span>
-            <input
-              type="number"
-              min="100"
-              step="50"
-              value={settings.startingChips}
-              onChange={(event) =>
-                setSettings((prev) => ({
-                  ...prev,
-                  startingChips: Math.max(100, Number(event.target.value)),
-                }))
-              }
-            />
-          </label>
-          {mode === "multi" && (
-            <label className="field field--toggle">
-              <span>ポットで勝者に分配 (互いに賭ける)</span>
-              <input
-                type="checkbox"
-                checked={settings.potMode}
-                onChange={(event) => setSettings((prev) => ({ ...prev, potMode: event.target.checked }))}
-              />
-            </label>
-          )}
-        </div>
-        {mode === "multi" && (
-          <div className="player-names">
-            {Array.from({ length: settings.playerCount }).map((_, index) => (
-              <label className="field" key={`name-${index}`}>
-                <span>プレイヤー {index + 1} 名</span>
-                <input
-                  type="text"
-                  value={players[index]?.name ?? `Player ${index + 1}`}
-                  onChange={(event) =>
-                    setPlayers((prev) =>
-                      prev.map((player, idx) =>
-                        idx === index ? { ...player, name: event.target.value || `Player ${index + 1}` } : player
-                      )
-                    )
-                  }
-                />
-              </label>
+      {screen === "lobby" && (
+        <section className="panel panel--lobby">
+          <div className="panel__header">
+            <h2>プレイヤー人数を選択</h2>
+            <p>チップを置くテーブル人数を決めて、すぐにディールへ。</p>
+          </div>
+          <div className="player-count">
+            {[1, 2, 3, 4].map((count) => (
+              <button
+                key={`count-${count}`}
+                className={playerCount === count ? "btn btn--primary" : "btn"}
+                onClick={() => setPlayerCount(count)}
+              >
+                {count} 人
+              </button>
             ))}
           </div>
-        )}
-        <div className="setup-actions">
-          <button className="btn btn--gold" onClick={handleSetupApply}>
-            {phase === "setup" ? "テーブルを開く" : "設定を反映"}
-          </button>
-        </div>
-      </section>
+          <div className="setup-actions">
+            <button className="btn btn--gold" onClick={handleLobbyStart}>
+              テーブルを開く
+            </button>
+          </div>
+        </section>
+      )}
 
-      <section className="table">
+      {screen === "table" && (
+        <section className="table">
         <div className="table__header">
           <div>
             <h2>{tableTitle}</h2>
             <p>ディーラーに勝ってチップを増やしましょう。</p>
           </div>
           <div className="table__info">
-            {mode === "multi" && settings.potMode && (
-              <div className="chip-chip">Pot: {totalPot.toFixed(0)}</div>
-            )}
+            {isMulti && <div className="chip-chip">Pot: {formatChips(totalPot)}</div>}
             <div className="chip-chip">Deck: {deck.length}</div>
           </div>
         </div>
@@ -530,7 +436,7 @@ export default function App() {
                     <h3>{player.name}</h3>
                     <span className="player__status">{statusLabel(player.status)}</span>
                   </div>
-                  <div className="player__chips">Chips: {player.chips.toFixed(0)}</div>
+                  <div className="player__chips">Chips: {formatChips(player.chips)}</div>
                 </div>
                 <div className="card-row">
                   {player.hand.map((card, cardIndex) => (
@@ -541,21 +447,31 @@ export default function App() {
                 </div>
                 <div className="player__footer">
                   <span>合計: {player.hand.length ? total : "-"}</span>
-                  <span>ベット: {player.bet}</span>
+                  <span>ベット: {formatChips(player.bet)}</span>
                   <span className="result">{resultLabel(player.result)}</span>
                 </div>
                 {phase === "betting" && (
-                  <div className="bet-input">
-                    <label>
-                      ベット
-                      <input
-                        type="number"
-                        min="0"
-                        max={player.chips}
-                        value={player.bet}
-                        onChange={(event) => handleBetChange(index, event.target.value)}
-                      />
-                    </label>
+                  <div className="bet-panel">
+                    <div className="bet-panel__label">チップを置く</div>
+                    <div className="chip-row">
+                      {CHIP_VALUES.map((value) => (
+                        <button
+                          key={`chip-${player.id}-${value}`}
+                          className="chip-button"
+                          onClick={() => handleBetAdd(index, value)}
+                        >
+                          ${value}
+                        </button>
+                      ))}
+                    </div>
+                    <div className="chip-actions">
+                      <button className="btn btn--ghost" onClick={() => handleBetClear(index)}>
+                        クリア
+                      </button>
+                      <button className="btn btn--ghost" onClick={() => handleBetAllIn(index)}>
+                        オールイン
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>
@@ -584,13 +500,13 @@ export default function App() {
               次のラウンド
             </button>
           )}
-          {phase === "setup" && <div className="hint">テーブルを開くとゲームが始まります。</div>}
         </div>
 
         <div className="message">
           <span>{message}</span>
         </div>
       </section>
+      )}
     </div>
   );
 }
