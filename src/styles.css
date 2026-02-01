@@ -273,7 +273,9 @@ body {
 
 .dealer__total {
   margin-top: 10px;
-  color: rgba(244, 239, 228, 0.75);
+  color: rgba(244, 239, 228, 0.9);
+  font-size: 0.95rem;
+  font-weight: 600;
 }
 
 .players {
@@ -333,17 +335,23 @@ body {
 
 .player__bet {
   margin-top: 10px;
-  font-size: 1.05rem;
-  color: var(--cream);
-  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--gold);
+  font-weight: 700;
 }
 
 .player__footer {
   display: flex;
   justify-content: space-between;
   margin-top: 10px;
-  font-size: 0.85rem;
-  color: rgba(244, 239, 228, 0.75);
+  font-size: 0.95rem;
+  color: rgba(244, 239, 228, 0.88);
+}
+
+.player__total,
+.player__bet-value {
+  color: var(--cream);
+  font-weight: 600;
 }
 
 .result {
@@ -547,6 +555,10 @@ body {
     letter-spacing: 2px;
   }
 
+  .dealer__total {
+    font-size: 0.85rem;
+  }
+
   .card-row {
     gap: 6px;
     margin-top: 8px;
@@ -590,11 +602,11 @@ body {
   .player__footer {
     flex-wrap: wrap;
     gap: 6px 10px;
-    font-size: 0.72rem;
+    font-size: 0.82rem;
   }
 
   .player__bet {
-    font-size: 0.95rem;
+    font-size: 1rem;
   }
 
   .bet-panel {

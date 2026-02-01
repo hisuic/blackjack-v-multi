@@ -479,8 +479,8 @@ export default function App() {
                       ))}
                     </div>
                     <div className="player__footer">
-                      <span>合計: {player.hand.length ? total : "-"}</span>
-                      <span>ベット: {formatChips(player.bet)}</span>
+                      <span className="player__total">合計: {player.hand.length ? total : "-"}</span>
+                      <span className="player__bet-value">ベット: {formatChips(player.bet)}</span>
                       <span className="result">{resultLabel(player.result)}</span>
                     </div>
                   </>
