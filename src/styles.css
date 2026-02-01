@@ -422,3 +422,149 @@ body {
     align-items: flex-start;
   }
 }
+
+@media (max-width: 720px) and (max-height: 900px) {
+  body {
+    overflow: hidden;
+  }
+
+  .app {
+    padding: 14px 12px 18px;
+    gap: 14px;
+  }
+
+  .app--table {
+    min-height: 100svh;
+  }
+
+  .app--table .hero {
+    display: none;
+  }
+
+  .panel {
+    padding: 16px;
+  }
+
+  .table {
+    padding: 14px;
+    border-radius: 18px;
+    display: grid;
+    grid-template-rows: auto auto 1fr auto auto;
+    gap: 12px;
+    min-height: calc(100svh - 28px);
+  }
+
+  .table__header h2 {
+    font-size: 1.2rem;
+    margin-bottom: 4px;
+  }
+
+  .table__header p {
+    font-size: 0.8rem;
+    margin: 0;
+  }
+
+  .table__info {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .chip-chip {
+    padding: 6px 10px;
+    font-size: 0.7rem;
+  }
+
+  .dealer {
+    margin-top: 0;
+    padding: 10px;
+    border-radius: 14px;
+  }
+
+  .dealer__label {
+    letter-spacing: 2px;
+  }
+
+  .card-row {
+    gap: 6px;
+    margin-top: 8px;
+  }
+
+  .card {
+    width: 42px;
+    height: 60px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+  }
+
+  .players {
+    margin-top: 0;
+    gap: 10px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .player {
+    padding: 10px;
+    border-radius: 14px;
+  }
+
+  .player__header {
+    align-items: flex-start;
+  }
+
+  .player__header h3 {
+    font-size: 0.95rem;
+  }
+
+  .player__status {
+    font-size: 0.65rem;
+  }
+
+  .player__chips {
+    font-size: 0.75rem;
+    padding: 4px 8px;
+  }
+
+  .player__footer {
+    flex-wrap: wrap;
+    gap: 6px 10px;
+    font-size: 0.72rem;
+  }
+
+  .bet-panel {
+    padding: 8px;
+    gap: 6px;
+  }
+
+  .bet-panel__label {
+    font-size: 0.65rem;
+  }
+
+  .chip-row {
+    gap: 6px;
+  }
+
+  .chip-button {
+    padding: 6px 8px;
+    font-size: 0.7rem;
+  }
+
+  .chip-actions {
+    gap: 6px;
+  }
+
+  .btn {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+  }
+
+  .table__actions {
+    margin-top: 0;
+  }
+
+  .message {
+    margin-top: 0;
+    padding: 10px 12px;
+    font-size: 0.8rem;
+  }
+}
